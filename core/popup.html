@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>AMZ Extractor ALL</title>
+    <link rel="stylesheet" href="popup.css">
+</head>
+
+<body>
+    <div class="popup-header">
+        <span class="popup-title">
+            <svg class="title-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M20 7L12 3L4 7M20 7L12 11M20 7V17L12 21M12 11L4 7M12 11V21M4 7V17L12 21" stroke="currentColor"
+                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+            AMZ EXTRACTOR ALL
+            <span class="version-badge">v1.0.0</span>
+        </span>
+        <div class="header-controls">
+            <div id="asin-count">
+                <span id="count-number">0</span>
+            </div>
+            <button id="settings-btn" class="settings-btn" title="Settings">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                    <path d="M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z" stroke="currentColor" stroke-width="2" />
+                    <path
+                        d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1 1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1Z"
+                        stroke="currentColor" stroke-width="2" />
+                </svg>
+            </button>
+        </div>
+    </div>
+
+    <!-- Keyword Input Section -->
+    <div class="keyword-section">
+        <div class="keyword-input-group">
+            <input type="text" id="keyword-input"
+                placeholder="Enter 1-2 keywords separated by comma (e.g. bluetooth speaker,wireless)" maxlength="100">
+            <button id="submit-keywords" class="submit-btn">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+                    <path d="M3 12h18M12 3l9 9-9 9" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round" />
+                </svg>
+                Open Search
+            </button>
+        </div>
+        <div id="current-keywords" class="current-keywords" style="display: none;">
+            <span class="keywords-label">Keywords: <span id="keywords-display"></span></span>
+        </div>
+    </div>
+
+    <!-- NEW: Extraction Section -->
+    <div id="extraction-section" class="extraction-section" style="display: none;">
+        <div class="extraction-header">
+            <h3>🎯 Ready for Enhanced Extraction!</h3>
+            <p>3 TOP ASINs selected. Extract images and product data.</p>
+        </div>
+        <div class="extraction-actions">
+            <button id="extract-btn" class="extract-btn">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round" />
+                    <polyline points="7,10 12,15 17,10" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round" />
+                    <line x1="12" y1="15" x2="12" y2="3" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" />
+                </svg>
+                🔍 Extract Images & Data
+            </button>
+        </div>
+    </div>
+
+    <!-- NEW: Extraction Progress -->
+    <div id="extraction-progress" class="extraction-progress" style="display: none;">
+        <div class="progress-header">
+            <span class="progress-text">🔄 Extracting data...</span>
+            <span class="progress-percent">0%</span>
+        </div>
+        <div class="progress-bar-container">
+            <div class="progress-bar" style="width: 0%"></div>
+        </div>
+        <div class="progress-details">
+            <span class="current-task">Preparing extraction...</span>
+        </div>
+        <div class="progress-stats" id="progress-stats" style="display: none;">
+            <!-- Will be populated dynamically -->
+        </div>
+    </div>
+
+    <!-- NEW: Extraction Results -->
+    <div id="extraction-results" class="extraction-results" style="display: none;">
+        <div class="results-header">
+            <h3>✅ Extraction Complete!</h3>
+            <div class="results-stats">
+                <span>📊 <span id="product-count">3</span> products</span>
+                <span>📷 <span id="image-count">27</span> images</span>
+                <span>📄 Full data processed</span>
+            </div>
+        </div>
+
+        <div class="results-actions">
+            <button id="preview-results" class="results-btn">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" stroke="currentColor" stroke-width="2" />
+                    <circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="2" />
+                </svg>
+                👁️ Preview
+            </button>
+            <button id="send-enhanced" class="results-btn primary">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+                    <line x1="22" y1="2" x2="11" y2="13" stroke="currentColor" stroke-width="2" />
+                    <polygon points="22,2 15,22 11,13 2,9 22,2" stroke="currentColor" stroke-width="2" />
+                </svg>
+                📤 Send Enhanced
+            </button>
+            <button id="save-results" class="results-btn">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+                    <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z" stroke="currentColor"
+                        stroke-width="2" />
+                    <polyline points="17,21 17,13 7,13 7,21" stroke="currentColor" stroke-width="2" />
+                    <polyline points="7,3 7,8 15,8" stroke="currentColor" stroke-width="2" />
+                </svg>
+                💾 Save
+            </button>
+        </div>
+    </div>
+
+    <div class="popup-content">
+        <table id="asin-table">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>GROUP</th>
+                    <th>IMAGE</th>
+                    <th>TITLE</th>
+                    <th>ASIN</th>
+                    <th>LINK</th>
+                    <th>ACTION</th>
+                </tr>
+            </thead>
+            <tbody id="asin-list">
+                <!-- Dynamic content will be inserted here -->
+            </tbody>
+        </table>
+
+        <!-- Empty state (will be shown/hidden by JavaScript) -->
+        <div id="empty-state" class="empty-state" style="display: none;">
+            <div class="empty-state-icon">📦</div>
+            <div class="empty-state-text">No ASINs collected yet</div>
+            <div class="empty-state-subtext">Enter keywords above or start selecting products on Amazon</div>
+        </div>
+    </div>
+
+    <div class="popup-actions">
+        <button id="copy-top3" class="action-btn" title="Copy TOP 3 ASINs">
+            <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="currentColor" viewBox="0 0 16 16">
+                <path
+                    d="M4 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2zm2-1a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1zM2 5a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1v-1h1v1a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h1v1z" />
+            </svg>
+            TOP 3
+        </button>
+
+        <button id="copy-others" class="action-btn" title="Copy OTHER ASINs">
+            <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="currentColor" viewBox="0 0 16 16">
+                <path
+                    d="M4 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2zm2-1a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1zM2 5a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1v-1h1v1a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h1v1z" />
+            </svg>
+            OTHERS
+        </button>
+
+        <button id="copy-all" class="action-btn" title="Copy All ASINs">
+            <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="currentColor" viewBox="0 0 16 16">
+                <path
+                    d="M4 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2zm2-1a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1zM2 5a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1v-1h1v1a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h1v1z" />
+            </svg>
+            ALL
+        </button>
+
+        <button id="send-webhook" class="action-btn webhook-btn" title="Send Basic Mode">
+            <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="currentColor" viewBox="0 0 16 16">
+                <path
+                    d="M15.854.146a.5.5 0 0 1 .11.54L13.026 8.99A.5.5 0 0 1 12.5 9.5h-2A1.5 1.5 0 0 0 9 11v2a.5.5 0 0 1-.49.474L.146.146A.5.5 0 0 1 .5 0h15a.5.5 0 0 1 .354.146z" />
+            </svg>
+            BASIC
+        </button>
+
+        <button id="clear-all" class="action-btn clear-btn" title="Clear All">
+            <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="currentColor" viewBox="0 0 16 16">
+                <path
+                    d="M6.5 1h3a.5.5 0 0 1 .5.5v1H6v-1a.5.5 0 0 1 .5-.5M11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3A1.5 1.5 0 0 0 5 1.5v1H1.5a.5.5 0 0 0 0 1h.538l.853 10.66A2 2 0 0 0 4.885 16h6.23a2 2 0 0 0 1.994-1.84l.853-10.66h.538a.5.5 0 0 0 0-1zm1.958 1-.846 10.58a1 1 0 0 1-.997.92h-6.23a1 1 0 0 1-.997-.92L3.042 3.5zm-7.487 1a.5.5 0 0 1 .528.47l.5 8.5a.5.5 0 0 1-.998.06L5 5.03a.5.5 0 0 1 .47-.53Zm5.058 0a.5.5 0 0 1 .47.53l-.5 8.5a.5.5 0 1 1-.998-.06l.5-8.5a.5.5 0 0 1 .528-.47M8 4.5a.5.5 0 0 1 .5.5v8.5a.5.5 0 0 1-1 0V5a.5.5 0 0 1 .5-.5" />
+            </svg>
+            CLEAR
+        </button>
+    </div>
+
+    <!-- Settings Panel -->
+    <div id="settings-panel" class="settings-panel" style="display: none;">
+        <div class="settings-container">
+            <div class="settings-header">
+                <h3>Webhook Configuration</h3>
+                <button id="close-settings" class="close-btn">×</button>
+            </div>
+            <div class="settings-content">
+                <div class="input-group">
+                    <label for="webhook-url">Webhook URL:</label>
+                    <input type="text" id="webhook-url"
+                        placeholder="https://n8n.azsmarthub.com/webhook/amz-extractor-all">
+                </div>
+                <div class="input-group">
+                    <label for="webhook-username">Username:</label>
+                    <input type="text" id="webhook-username" placeholder="amzextractor">
+                </div>
+                <div class="input-group">
+                    <label for="webhook-password">Password:</label>
+                    <input type="password" id="webhook-password" placeholder="UFjSooyolve8zjF2mn7Q">
+                </div>
+                <div class="input-group">
+                    <label for="webhook-mode">Webhook Mode:</label>
+                    <select id="webhook-mode">
+                        <option value="enhanced">Enhanced (with extraction data)</option>
+                        <option value="basic">Basic (ASINs only)</option>
+                    </select>
+                </div>
+                <div class="settings-actions">
+                    <button id="test-webhook" class="test-btn">
+                        🔗 Test Connection
+                    </button>
+                    <button id="save-settings" class="save-btn">
+                        💾 Save Settings
+                    </button>
+                    <button id="reset-settings" class="reset-btn">
+                        🔄 Reset Default
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="toast"></div>
+
+    <!-- Load shared utilities first -->
+    <script src="../shared/storage.js"></script>
+    <script src="../shared/webhook.js"></script>
+    <script src="../shared/utils.js"></script>
+
+    <!-- Then load popup script -->
+    <script src="popup.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,97 @@
+{
+  "manifest_version": 3,
+  "name": "AMZ Extractor ALL",
+  "version": "1.0.0",
+  "description": "Complete Amazon product extraction: ASINs, Images, and Data processing with enhanced webhook integration",
+  
+  "permissions": [
+    "storage",
+    "activeTab", 
+    "scripting",
+    "tabs"
+  ],
+  
+  "host_permissions": [
+    "https://n8n.azsmarthub.com/*",
+    "https://www.amazon.com/*",
+    "https://amazon.com/*",
+    "https://*.amazon.com/*",
+    "https://www.amazon.co.uk/*",
+    "https://www.amazon.ca/*", 
+    "https://www.amazon.com.au/*",
+    "https://www.amazon.de/*",
+    "https://www.amazon.fr/*",
+    "https://www.amazon.it/*",
+    "https://www.amazon.es/*",
+    "https://www.amazon.in/*",
+    "https://www.amazon.co.jp/*",
+    "https://www.amazon.com.mx/*",
+    "https://www.amazon.nl/*",
+    "https://www.amazon.sg/*",
+    "https://www.amazon.ae/*",
+    "https://www.amazon.com.tr/*",
+    "https://www.amazon.se/*",
+    "https://www.amazon.pl/*",
+    "https://www.amazon.sa/*",
+    "https://www.amazon.eg/*",
+    "https://www.amazon.com.be/*",
+    "https://*/*"
+  ],
+  
+  "action": {
+    "default_popup": "core/popup.html",
+    "default_icon": {
+      "16": "assets/icons/icon16.png",
+      "32": "assets/icons/icon32.png", 
+      "48": "assets/icons/icon48.png",
+      "128": "assets/icons/icon128.png"
+    }
+  },
+  
+  "background": {
+    "service_worker": "core/background.js"
+  },
+  
+  "content_scripts": [
+    {
+      "matches": [
+        "https://www.amazon.com/*",
+        "https://www.amazon.co.uk/*",
+        "https://www.amazon.ca/*",
+        "https://www.amazon.com.au/*", 
+        "https://www.amazon.de/*",
+        "https://www.amazon.fr/*",
+        "https://www.amazon.it/*",
+        "https://www.amazon.es/*",
+        "https://www.amazon.in/*",
+        "https://www.amazon.co.jp/*",
+        "https://www.amazon.com.mx/*",
+        "https://www.amazon.nl/*",
+        "https://www.amazon.sg/*",
+        "https://www.amazon.ae/*",
+        "https://www.amazon.com.tr/*",
+        "https://www.amazon.se/*",
+        "https://www.amazon.pl/*",
+        "https://www.amazon.sa/*",
+        "https://www.amazon.eg/*",
+        "https://www.amazon.com.be/*"
+      ],
+      "js": ["core/content.js"],
+      "run_at": "document_idle"
+    }
+  ],
+  
+  "icons": {
+    "16": "assets/icons/icon16.png",
+    "32": "assets/icons/icon32.png",
+    "48": "assets/icons/icon48.png", 
+    "128": "assets/icons/icon128.png"
+  },
+  
+  "web_accessible_resources": [
+    {
+      "resources": ["shared/webhook.js", "plugins/extractor/results.html"],
+      "matches": ["<all_urls>"]
+    }
+  ]
+}
